@@ -2,6 +2,7 @@
 const models = require('./../models');
 var usuario = models.usuario;
 var uuid = require('uuid');
+const {validationResult} = require('express-validator');
 
 class usuarioControl{
     async listar(req, res){
@@ -16,26 +17,36 @@ class usuarioControl{
         });
     }
     async guardar(req, res){
-        const data = {
-            nombre: req.body.nombre,
-            clave: req.body.clave,
-            correo: req.body.correo,
-            external: uuid.v4()
-        };
-        let usuarioCreado = await usuario.create(data);
-        if(usuarioCreado){
-            res.status(200);
-            res.json({
-                msg:"ok",
-                code:200,
-                data:"Se ha registrado"
-            });
+        let errors = validationResult(req);
+        if(errors.isEmpty()){
+            const data = {
+                nombre: req.body.nombre,
+                clave: req.body.clave,
+                correo: req.body.correo,
+                external: uuid.v4()
+            };
+            let usuarioCreado = await usuario.create(data);
+            if(usuarioCreado){
+                res.status(200);
+                res.json({
+                    msg:"ok",
+                    code:200,
+                    data:"Se ha registrado"
+                });
+            }else{
+                res.status(400);
+                res.json({
+                    msg:"Solucitud no válida",
+                    code:400,
+                    data:"No se ha registrado"
+                });
+            }
         }else{
             res.status(400);
             res.json({
-                msg:"Solucitud no válida",
+                msg:"error",
                 code:400,
-                data:"No se ha registrado"
+                data:errors
             });
         }
     }

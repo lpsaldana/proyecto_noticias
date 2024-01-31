@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const {body} = require('express-validator');
 
 const usuarioA = require('../controls/usuarioControl');
 const noticiaA = require('../controls/noticiaControl');
@@ -12,7 +13,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/admin/usuarios', usuarioControl.listar);
 
-router.post('/admin/usuarios/guardar', usuarioControl.guardar);
+router.post('/admin/usuarios/guardar', [body('nombre','ingrese un nombre válido').trim().exists().not().isEmpty(), body('correo','ingrese un correo válido').trim().exists().not().isEmpty().isEmail(), body('clave','ingrese una clave válida').trim().exists().not().isEmpty()], usuarioControl.guardar);
 router.get('/admin/usuarios/:external', usuarioControl.buscar);
 router.post('/admin/usuarios/modificar', usuarioControl.actualizar);
 
