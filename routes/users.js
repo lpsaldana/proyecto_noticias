@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const {body} = require('express-validator');
+let jwt = require('jsonwebtoken');
 
 const usuarioA = require('../controls/usuarioControl');
 const noticiaA = require('../controls/noticiaControl');
@@ -14,9 +15,28 @@ var auth = function middleware(req, res, next){
   console.log(token);
   if(!token){
     res.status(403);
-    res.json({ msg: "Solucitud no válida", code: 403, data: "no se envió token" });
+    res.json({ msg: "Solucitud no válida", code: 403, data: "No se envió token" });
   }else{
-    next();
+    require('dotenv').config();
+    const llave = process.env.KEY;
+    jwt.verify(token,llave,async(err,decoded)=>{
+      if(err){
+        res.status(401);
+        res.json({ msg: "Solucitud no válida", code: 401, data: "Token no válido", error:err });
+      }else{
+        const models = require('./../models');
+        var usuario = models.usuario;
+        const auxU = await usuario.findOne({
+          where:{external:decoded.external}
+        });
+        if(!auxU){
+          res.status(401);
+          res.json({ msg: "Solucitud no válida", code: 401, data: "Token no válido" });
+        }else{
+          next();
+        }
+      }
+    });
   }
 }
 /* GET users listing. */
