@@ -9,7 +9,7 @@ module.exports =(sequelize, DataTypes)=>{
         estado:{type:DataTypes.BOOLEAN, defaultValue:true}
     },{freezeTableName:true});
     usuario.associate = function(models){
-        usuario.hasMany(models.noticia,{foreingkey:'id_usuario',as:'noticia'});
+        usuario.hasMany(models.noticia,{foreignKey:'id_usuario',as:'noticia'});
     }
     return usuario;
 }

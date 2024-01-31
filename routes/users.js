@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 
 const usuarioA = require('../controls/usuarioControl');
+const noticiaA = require('../controls/noticiaControl');
 const usuarioControl = new usuarioA();
+const noticiaControl = new noticiaA();
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
@@ -14,6 +16,10 @@ router.post('/admin/usuarios/guardar', usuarioControl.guardar);
 router.get('/admin/usuarios/:external', usuarioControl.buscar);
 router.post('/admin/usuarios/modificar', usuarioControl.actualizar);
 
+router.get('/admin/noticias', noticiaControl.listar);
+router.post('/admin/noticias/guardar', noticiaControl.guardar);
+router.get('/admin/noticias/:external', noticiaControl.buscar);
+router.post('/admin/noticias/modificar', noticiaControl.actualizar);
 /*
 router.get('/inicio/:a/:b', function(req, res, next) {
   const a = Number(req.params.a);
