@@ -4,14 +4,27 @@ const {body} = require('express-validator');
 
 const usuarioA = require('../controls/usuarioControl');
 const noticiaA = require('../controls/noticiaControl');
+const loginA = require('../controls/loginControl');
 const usuarioControl = new usuarioA();
 const noticiaControl = new noticiaA();
+const loginControl = new loginA();
+
+var auth = function middleware(req, res, next){
+  const token = req.headers["api-token"];
+  console.log(token);
+  if(!token){
+    res.status(403);
+    res.json({ msg: "Solucitud no válida", code: 403, data: "no se envió token" });
+  }else{
+    next();
+  }
+}
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/admin/usuarios', usuarioControl.listar);
+router.get('/admin/usuarios', auth, usuarioControl.listar);
 
 router.post('/admin/usuarios/guardar', [body('nombre','ingrese un nombre válido').trim().exists().not().isEmpty(), body('correo','ingrese un correo válido').trim().exists().not().isEmpty().isEmail(), body('clave','ingrese una clave válida').trim().exists().not().isEmpty()], usuarioControl.guardar);
 router.get('/admin/usuarios/:external', usuarioControl.buscar);
@@ -21,6 +34,8 @@ router.get('/admin/noticias', noticiaControl.listar);
 router.post('/admin/noticias/guardar', noticiaControl.guardar);
 router.get('/admin/noticias/:external', noticiaControl.buscar);
 router.post('/admin/noticias/modificar', noticiaControl.actualizar);
+
+router.post('/login',[body('correo','ingrese un correo válido').trim().exists().not().isEmpty().isEmail(), body('clave','ingrese una clave válida').trim().exists().not().isEmpty()], loginControl.iniciarSesion);
 /*
 router.get('/inicio/:a/:b', function(req, res, next) {
   const a = Number(req.params.a);
