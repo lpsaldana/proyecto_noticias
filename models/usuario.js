@@ -5,7 +5,7 @@ module.exports =(sequelize, DataTypes)=>{
         correo:{type:DataTypes.STRING(100), unique:true},
         nombre:{type:DataTypes.STRING(100), defaultValue:"NONE"},
         clave:{type:DataTypes.STRING(100), allowNull:false},
-        extenal:{type:DataTypes.UUID, defaultValue:DataTypes.UUIDv4},
+        external:{type:DataTypes.UUID, defaultValue:DataTypes.UUIDv4},
         estado:{type:DataTypes.BOOLEAN, defaultValue:true}
     },{freezeTableName:true});
     usuario.associate = function(models){
