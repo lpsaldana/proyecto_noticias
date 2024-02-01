@@ -54,6 +54,7 @@ router.get('/admin/noticias', noticiaControl.listar);
 router.post('/admin/noticias/guardar', noticiaControl.guardar);
 router.get('/admin/noticias/:external', noticiaControl.buscar);
 router.post('/admin/noticias/modificar', noticiaControl.actualizar);
+router.get('/admin/noticias/user/:external', auth, noticiaControl.listar_usuario);
 
 router.post('/login',[body('correo','ingrese un correo válido').trim().exists().not().isEmpty().isEmail(), body('clave','ingrese una clave válida').trim().exists().not().isEmpty()], loginControl.iniciarSesion);
 /*

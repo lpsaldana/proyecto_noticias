@@ -16,6 +16,24 @@ class noticiaControl {
             data: lista
         });
     }
+
+    async listar_usuario(req, res){
+        const auxU = await usuario.findOne({
+            where:{external:req.params.external}
+        });
+        if(auxU){
+            const lista = await noticia.findAll({
+                attributes: ['titulo', 'cuerpo', 'fecha', 'external', 'estado'],
+                where:{id_usuario:auxU.id}
+            });
+            res.status(200); 
+            res.json({ msg:"ok", code:200, data:lista });
+        }else{
+            res.status(200);
+            res.json({ msg:"ok", code:200, data:[] });
+        }
+    }
+
     async guardar(req, res) {
         let usuarioNoticia = await usuario.findOne({
             attributes: ['id'],
