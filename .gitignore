@@ -4,12 +4,6 @@ node_modules/
 # Archivo de bloqueo para npm
 package-lock.json
 
-# Entorno de desarrollo
-.env
-
-# Archivos de configuración locales
-config/*.json
-
 # Logs
 logs/
 *.log
